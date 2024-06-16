@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "xnt2+U9Lka4iRQjs8cjOqXQbtu+2vtS1knOmIUkBpYo=",
+  "Source": "EmployeeWorkingHoursTracker",
+  "BasePath": "_content/EmployeeWorkingHoursTracker",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
