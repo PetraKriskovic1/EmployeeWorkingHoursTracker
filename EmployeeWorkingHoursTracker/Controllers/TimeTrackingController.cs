@@ -66,7 +66,15 @@ namespace EmployeeWorkingHoursTracker.Controllers
                 .Where(t => t.EmployeeId == employeeId && t.StartTimeAsDateTime >= fromStartTime && t.EndTimeAsDateTime <= toEndTime)
                 .ToListAsync();
 
-            return trackings;
+            if (trackings == null || !trackings.Any())
+            {
+                return NotFound("No tracking records found for the specified employee and time range.");
+            }
+
+            double totalHoursWorked = trackings
+                .Sum(t => (t.EndTimeAsDateTime - t.StartTimeAsDateTime)?.TotalHours ?? 0);
+
+            return Ok(totalHoursWorked);
         }
 
         // Get Working Hours for All Employees
@@ -79,11 +87,17 @@ namespace EmployeeWorkingHoursTracker.Controllers
                 .Where(t => t.StartTimeAsDateTime >= fromStartTime && t.EndTimeAsDateTime <= toEndTime)
                 .ToListAsync();
 
-            var orderedTrackings = trackings
-                .OrderByDescending(t => (t.EndTimeAsDateTime - t.StartTimeAsDateTime).Value.TotalHours)
-                .ToList();
+            var totalHoursByEmployee = trackings
+        .GroupBy(t => t.EmployeeId)
+        .Select(g => new
+        {
+            EmployeeId = g.Key,
+            TotalHoursWorked = g.Sum(t => (t.EndTimeAsDateTime - t.StartTimeAsDateTime)?.TotalHours ?? 0)
+        })
+        .OrderByDescending(e => e.TotalHoursWorked)
+        .ToList();
 
-            return orderedTrackings;
+            return Ok(totalHoursByEmployee);
         }
 
     }
